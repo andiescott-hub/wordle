@@ -27,9 +27,19 @@
   --header-height: 50px;
   --keyboard-height: 200px;
   --font: 'Libre Franklin Variable', 'Libre Franklin', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-display: 'Zilla Slab', Georgia, 'Times New Roman', serif;
+  /* Stand-in for NYT's Karnak Condensed Bold: heavy Roboto Slab, narrowed horizontally. */
+  --font-display: 'Roboto Slab Variable', 'Roboto Slab', Georgia, 'Times New Roman', serif;
+  --display-condense: scaleX(0.85);
+  /* Space reserved above the header. See the iOS home-screen override below. */
+  --inset-top: env(safe-area-inset-top, 0px);
 
   color-scheme: light;
+}
+
+/* iOS 26+ draws a Liquid Glass blur about 40pt below the status bar in home-screen web apps,
+   which no setting turns off, so keep the header clear of it. */
+:root[data-standalone='ios'] {
+  --inset-top: calc(env(safe-area-inset-top, 0px) + 40px);
 }
 
 :root[data-theme='dark'] {
@@ -96,7 +106,7 @@ button {
   display: flex;
   flex-direction: column;
   height: 100dvh;
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--inset-top);
 }
 
 /* Header: wordmark and the three game icons, nothing else. */
@@ -112,9 +122,11 @@ button {
 .wordmark {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 28px;
-  letter-spacing: 0.01em;
+  font-weight: 900;
+  font-size: 33px;
+  line-height: 1;
+  transform: var(--display-condense);
+  transform-origin: left center;
 }
 
 .header-icons {
@@ -407,7 +419,7 @@ button {
 /* Toasts sit just under the header, above everything else. */
 .toaster {
   position: fixed;
-  top: calc(env(safe-area-inset-top) + var(--header-height) + 12px);
+  top: calc(var(--inset-top) + var(--header-height) + 12px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -469,7 +481,7 @@ button {
     height: 100%;
     border-radius: 0;
     box-shadow: none;
-    padding: calc(16px + env(safe-area-inset-top)) 24px calc(32px + env(safe-area-inset-bottom));
+    padding: calc(16px + var(--inset-top)) 24px calc(32px + env(safe-area-inset-bottom));
   }
 }
 
@@ -502,8 +514,10 @@ button {
 .modal-heading {
   margin: 0 0 8px;
   font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 900;
+  transform: var(--display-condense);
+  transform-origin: left center;
 }
 
 /* How To Play */
@@ -698,10 +712,11 @@ button {
 .stats-heading {
   margin: 12px 0 0;
   font-family: var(--font-display);
-  font-size: 34px;
-  font-weight: 700;
+  font-size: 35px;
+  font-weight: 900;
   line-height: 1.1;
   text-align: center;
+  transform: var(--display-condense);
 }
 
 .stats-answer {

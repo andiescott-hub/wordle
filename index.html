@@ -21,6 +21,8 @@
         var dark = typeof s.darkTheme === 'boolean' ? s.darkTheme : !window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)').matches;
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
         document.documentElement.dataset.contrast = s.highContrast ? 'high' : 'normal';
+        // navigator.standalone only exists on iOS, and is true when opened from the home screen.
+        if (navigator.standalone === true) document.documentElement.dataset.standalone = 'ios';
       })();
     </script>
   </head>

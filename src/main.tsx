@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/libre-franklin';
-import '@fontsource/zilla-slab/700.css';
+import '@fontsource-variable/roboto-slab';
 import App from './App';
 import './styles.css';
 

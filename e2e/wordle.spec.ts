@@ -222,3 +222,22 @@ test('settings switch theme and contrast', async ({ page }) => {
   await page.getByRole('button', { name: 'Help' }).click();
   await expect(page.getByRole('dialog', { name: 'How To Play' })).toContainText('Guess the Wordle in 6 tries.');
 });
+
+test('in the iOS home-screen app the header clears the status bar blur', async ({ page }) => {
+  await open(page);
+  await expect(page.locator('html')).not.toHaveAttribute('data-standalone');
+  expect((await page.locator('.header').boundingBox())!.y).toBe(0);
+
+  // Simulate launching from the iPhone home screen.
+  await page.addInitScript(() => Object.defineProperty(Navigator.prototype, 'standalone', { get: () => true }));
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-standalone', 'ios');
+  expect((await page.locator('.header').boundingBox())!.y).toBe(40);
+
+  // The whole game still fits on screen, and full-screen pages keep their close button clear too.
+  const keyboard = (await page.getByRole('group', { name: 'Keyboard' }).boundingBox())!;
+  expect(keyboard.y + keyboard.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+  await page.getByRole('button', { name: 'Help' }).click();
+  expect((await page.getByRole('button', { name: 'Close' }).boundingBox())!.y).toBeGreaterThanOrEqual(40);
+  await page.screenshot({ path: `${SHOTS}/07-home-screen-help.png` });
+});
